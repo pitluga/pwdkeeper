@@ -11,23 +11,19 @@ var PasswordDatabase = Backbone.Model.extend({
     this.set({passwords: this.get("passwords").concat([password])});
   },
 
-  lock: function(masterPassword) {
-
-  },
-
-  unlock: function(masterPassword) {
-
-  },
-
   localSave: function() {
-    localStorage.setItem("pwdkeeper", JSON.stringify(this.toJSON()));
+    localStorage.setItem("pwdkeeper", this.encryptData());
+  },
+
+  encryptData: function() {
+    return Aes.Ctr.encrypt(JSON.stringify(this.toJSON()), UserData.masterPassword, 256);
   }
 
 }, {
   localFetch: function() {
     var local = localStorage.getItem('pwdkeeper')
     if (local != null) {
-      var json = JSON.parse(local);
+      var json = JSON.parse(Aes.Ctr.decrypt(local, UserData.masterPassword, 256));
       return new PasswordDatabase(json)
     }
     return new PasswordDatabase();
@@ -62,9 +58,13 @@ var DatabaseView = Backbone.View.extend({
   }
 });
 
+var UserData = {
+  masterPassword: null
+};
+
 $(function() {
-  var storage = localStorage.getItem('pwdkeeper');
   // var db = new PasswordDatabase({ passwords: [{title: 'github', username: 'pitluga', password: 'password'}]});
+  UserData.masterPassword = prompt("enter your master password");
   var db = PasswordDatabase.localFetch();
   var view = new DatabaseView({model: db, el: $('#db')});
   view.render();
