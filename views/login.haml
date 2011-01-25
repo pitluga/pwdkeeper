@@ -1,0 +1,12 @@
+!!!
+%html
+  %head
+    %title Pwd Keeper
+  %body
+    %form{:action => '/login', :method => 'post'}
+      %label{:for => 'username'} User Name
+      %input#username{:type => 'text'}
+      %label{:for => 'password'} Password
+      %input#password{:type => 'password'}
+      %input#login{:type => 'submit'}
+

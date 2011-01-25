@@ -1,0 +1,44 @@
+!!!
+%html
+  %head
+    = javascript_tag 'vendor/jquery-1.4.4'
+    = javascript_tag 'vendor/mustache'
+    = javascript_tag 'vendor/aes'
+    = javascript_tag 'vendor/underscore'
+    = javascript_tag 'vendor/backbone'
+    = javascript_tag 'application'
+    %link{:src => '/stylesheets/application.css', :type => 'application/css'}
+  %body
+    #cipher{:style => 'display:none;'}
+      = @cipher
+    #db
+
+    %script{:id => 'db_template', :type => 'application/mustache'}
+      .content
+        %table
+          %thead
+            %tr
+              %th title
+              %th user name
+              %th password
+          %tbody
+            ="{{#passwords}}"
+            %tr{:id => "pw-{{title}}"}
+              %td {{title}}
+              %td {{username}}
+              %td {{password}}
+            ="{{/passwords}}"
+            %tr.new
+              %td
+                %input.title{:type => 'text'}
+              %td
+                %input.username{:type => 'text'}
+              %td
+                %input.password{:type => 'password'}
+      .controls
+        %button#save
+          Save
+        %button#add
+          Add
+
+
